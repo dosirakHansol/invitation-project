@@ -1,7 +1,10 @@
 package com.invitation.backend.service;
 
+import com.invitation.backend.config.JwtTokenProvider;
 import com.invitation.backend.domain.AuthProvider;
 import com.invitation.backend.domain.User;
+import com.invitation.backend.dto.LoginRequest;
+import com.invitation.backend.dto.LoginResponse;
 import com.invitation.backend.dto.SignupRequest;
 import com.invitation.backend.dto.UserResponse;
 import com.invitation.backend.repository.UserRepository;
@@ -17,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserResponse signup(SignupRequest request) {
@@ -40,4 +44,24 @@ public class UserService {
         // 4. DTO로 변환해서 반환
         return UserResponse.from(savedUser);
     }
+
+    // 로그인
+    @Transactional
+    public LoginResponse login(LoginRequest request) {
+        // 1. 사용자 조회
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다"));
+
+        // 2. 비밀번호 확인
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다");
+        }
+
+        // 3. JWT 토큰 생성
+        String token = jwtTokenProvider.generateToken(user.getUsername());
+
+        // 4. 응답 반환
+        return LoginResponse.of(token, UserResponse.from(user));
+    }
+
 }

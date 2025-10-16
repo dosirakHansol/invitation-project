@@ -1,5 +1,7 @@
 package com.invitation.backend.controller;
 
+import com.invitation.backend.dto.LoginRequest;
+import com.invitation.backend.dto.LoginResponse;
 import com.invitation.backend.dto.SignupRequest;
 import com.invitation.backend.dto.UserResponse;
 import com.invitation.backend.service.UserService;
@@ -23,5 +25,12 @@ public class AuthController {
     public ResponseEntity<UserResponse> signup(@Valid @RequestBody SignupRequest request) {
         UserResponse response = userService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // 로그인 API
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
