@@ -38,18 +38,18 @@ public class SecurityConfig {
         }
 
         http
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 세션 사용 안 함
-                )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/test/**").permitAll()  // 인증 없이 접근
-                        .anyRequest().authenticated()  // 나머지는 인증 필요
-                )
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 필터 추가
+            .sessionManagement(session -> session
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 세션 사용 안 함
+            )
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/api/auth/**", "/api/test/**", "/api/events/share/**").permitAll()  // 👈 추가
+                    .anyRequest().authenticated()
+            )
+            .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 필터 추가
         ;
 
         return http.build();
