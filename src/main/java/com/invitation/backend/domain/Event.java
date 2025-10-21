@@ -1,5 +1,6 @@
 package com.invitation.backend.domain;
 
+import com.invitation.backend.dto.EventUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -83,5 +84,17 @@ public class Event {
     // 조회수 증가
     public void increaseViewCount() {
         this.viewCount++;
+    }
+
+    // 초대장 정보 수정
+    public void update(EventUpdateRequest request) {
+        this.title = request.getTitle();
+        this.eventDate = request.getEventDate();
+        this.eventTime = request.getEventTime();
+        this.location = request.getLocation();
+        this.locationLat = request.getLocationLat();
+        this.locationLng = request.getLocationLng();
+        this.templateType = request.getTemplateType();
+        this.customContent = request.getCustomContent();
     }
 }
