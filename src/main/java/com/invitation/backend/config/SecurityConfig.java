@@ -42,7 +42,7 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 세션 사용 안 함
             )
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/**", "/api/test/**", "/api/events/share/**").permitAll()  // 👈 추가
+                    .requestMatchers("/api/auth/**", "/api/test/**", "/api/events/share/**", "/api/rsvp/**").permitAll()
                     .anyRequest().authenticated()
             )
             .exceptionHandling(exception -> exception
